@@ -1,6 +1,7 @@
 import base64
 import hashlib
 from Crypto.Cipher import AES
+from Crypto.Hash import SHA256
 from Crypto import Random
 
 
