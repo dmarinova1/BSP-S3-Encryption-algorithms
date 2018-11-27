@@ -3,8 +3,16 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto import Random
+from Crypto.Cipher import DES
 
 
+
+
+
+def despad(text):
+    while len(text) % 8 != 0:
+        text += ' '
+    return text
 
 
 def make_key(aespassword):
@@ -112,7 +120,7 @@ def main():
         
         if eOrD == "encrypt" or eOrD == "e":
             while True: 
-                choice1 = int(input("1.Encryption with Caeser cipher\n2.Encryption with ROT13\n3.Encryption with AES\n4.Go back\nChoose 1,2, 3 or 4: "))
+                choice1 = int(input("1.Encryption with Caeser cipher\n2.Encryption with ROT13\n3.Encryption with AES\n4. Encryption with DES\n5.Go back\nChoose 1,2, 3, 4 or 5: "))
                 if choice1 == 1:
                     text1 = input("What is the message you would like to have encrypted?: ")
                     print("---Encrypting with Caeser cipher---")
@@ -130,6 +138,14 @@ def main():
                     print(b"The ciphertext is: "+ ciphertext)
                 
                 elif choice1 == 4:
+                    key = "mysecret"
+                    des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
+                    text1 = input("Enter your message: ")
+                    padded_text = despad(text1)
+                    encrypted_text = des.encrypt(padded_text.encode("utf-8"))
+                    print(encrypted_text)
+                
+                elif choice1 == 5:
                     break
 
                 else:
@@ -137,7 +153,7 @@ def main():
 
         if eOrD == "decrypt" or eOrD == "d":
             while True:
-                choice2 = int(input("1.Decryption with Caeser cipher\n2.Decryption with ROT13\n3. Decryption with AES\n4.Go back\nChoose 1,2,3 or 4: "))
+                choice2 = int(input("1.Decryption with Caeser cipher\n2.Decryption with ROT13\n3. Decryption with AES\n4.Decryption with DES\n5.Go back\nChoose 1,2,3 or 4: "))
                 if choice2 == 1:
                     text2 = input("Enter message to be decrypted: ")
                     print("---Decrypting with Caeser cipher---")
@@ -151,9 +167,19 @@ def main():
                     key = make_key(aespassword)
                     ciphertext, iv = aesencrypt(aesinput2, key)
                     decrypted = aesdecrypt(ciphertext,key,iv)
+                    print(ciphertext)
                     print("The clear text is: " + decrypted)
-
+                
                 elif choice2 == 4:
+                    key = "mysecret"
+                    des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
+                    desinput = input("Enter your encrypted message: ")
+                    padded_text = despad(desinput)
+                    encrypted_text = des.encrypt(padded_text.encode("utf-8"))
+                    print(b"Given encrypted message: " + encrypted_text)
+                    print("The cleartext is: " + des.decrypt(encrypted_text).decode("utf-8"))
+
+                elif choice2 == 5:
                     break
                 else:
                     print("Invalid choice")
