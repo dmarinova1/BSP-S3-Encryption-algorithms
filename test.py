@@ -8,7 +8,6 @@ from Crypto.Cipher import DES
 
 
 
-
 def despad(text):
     while len(text) % 8 != 0:
         text += ' '
@@ -53,25 +52,20 @@ def encryptCaeser(message):
 
 
 def decryptCaeser(message):
-    message = message
-    message = message.upper()
-    key = 3
-    alphabet = 'abcdefghijklmnopqrstuvwxyz'
-    alphalen = len(alphabet)
-    newMessage = ""
-    for char in message:
-        if char in alphabet:
-            position = alphabet.find(char)
-            position -= key
-            if position >= alphalen:
-                position = position-alphalen
-            elif position < 0:
-                position += alphalen
-                newMessage += alphabet[position]
-        else:
-            newMessage += char
-    return newMessage
+	message = message
+	key = 3
+	alphabet = 'abcdefghijklmnopqrstuvwxyz'
+	newMessage = ""
+	for char in message:
+		if char in alphabet:
+			position = alphabet.find(char)
+			newPosition = (position - key) % 26
+			newChar = alphabet[newPosition]
+			newMessage += newChar
 
+		else:
+			newMessage += char
+	return newMessage
 
 
 def encrypt_rot13():
@@ -126,6 +120,7 @@ def main():
                     print("---Encrypting with Caeser cipher---")
                     print(encryptCaeser(text1))
 
+
                 elif choice1 == 2:
                     print("---Encrypting with ROT13---")
                     encrypt_rot13()
@@ -135,7 +130,7 @@ def main():
                     aesinput1 = input("Enter your message to be encrypted: ")
                     key = make_key(aespassword)
                     ciphertext,iv = aesencrypt(aesinput1, key)
-                    print(b"The ciphertext is: "+ ciphertext)
+                    print(b"The ciphertext is: " + ciphertext)
                 
                 elif choice1 == 4:
                     key = "mysecret"
@@ -158,6 +153,10 @@ def main():
                     text2 = input("Enter message to be decrypted: ")
                     print("---Decrypting with Caeser cipher---")
                     print(decryptCaeser(text2))
+                    return
+
+
+
                 elif choice2 == 2:
                     print("---Decrypting with ROT13---")
                     decrypt_rot13()
@@ -166,9 +165,10 @@ def main():
                     aesinput2 = input("Enter message to be decrypted: ")
                     key = make_key(aespassword)
                     ciphertext, iv = aesencrypt(aesinput2, key)
-                    decrypted = aesdecrypt(ciphertext,key,iv)
                     print(ciphertext)
+                    decrypted = aesdecrypt(ciphertext,key,iv)
                     print("The clear text is: " + decrypted)
+                    
                 
                 elif choice2 == 4:
                     key = "mysecret"
