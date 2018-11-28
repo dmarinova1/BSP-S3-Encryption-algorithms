@@ -179,8 +179,8 @@ def main():
                     print("%f seconds." % (end - start))
 
                 elif choice2 == 3:
-                    aespassword = input("Enter AES password: ")
                     aesinput2 = input("Enter message to be decrypted: ")
+                    aespassword = input("Enter AES password: ")
                     key = make_key(aespassword)
                     ciphertext, iv = aesencrypt(aesinput2, key)
                     print(ciphertext)
