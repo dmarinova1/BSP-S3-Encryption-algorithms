@@ -4,7 +4,7 @@ from Crypto.Cipher import AES
 from Crypto.Hash import SHA256
 from Crypto import Random
 from Crypto.Cipher import DES
-
+from timeit import default_timer as time
 
 
 
@@ -118,27 +118,39 @@ def main():
                 if choice1 == 1:
                     text1 = input("What is the message you would like to have encrypted?: ")
                     print("---Encrypting with Caeser cipher---")
+                    start = time()
                     print(encryptCaeser(text1))
+                    end = time()
+                    print("%f seconds." % (end - start))
 
 
                 elif choice1 == 2:
                     print("---Encrypting with ROT13---")
+                    start = time()
                     encrypt_rot13()
+                    end = time()
+                    print("%f seconds." % (end - start))
 
                 elif choice1 == 3:
                     aespassword = input("Enter AES encryption password: ")
                     aesinput1 = input("Enter your message to be encrypted: ")
                     key = make_key(aespassword)
+                    start = time()
                     ciphertext,iv = aesencrypt(aesinput1, key)
                     print(b"The ciphertext is: " + ciphertext)
+                    end = time()
+                    print("%f seconds." % (end - start))
                 
                 elif choice1 == 4:
                     key = "mysecret"
                     des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
                     text1 = input("Enter your message: ")
                     padded_text = despad(text1)
+                    start = time()
                     encrypted_text = des.encrypt(padded_text.encode("utf-8"))
                     print(encrypted_text)
+                    end = time()
+                    print("%f seconds." % (end - start))
                 
                 elif choice1 == 5:
                     break
@@ -152,32 +164,44 @@ def main():
                 if choice2 == 1:
                     text2 = input("Enter message to be decrypted: ")
                     print("---Decrypting with Caeser cipher---")
+                    start = time()
                     print(decryptCaeser(text2))
-                    return
+                    end = time()
+                    print("%f seconds." % (end - start))
 
 
 
                 elif choice2 == 2:
                     print("---Decrypting with ROT13---")
+                    start = time()
                     decrypt_rot13()
+                    end = time()
+                    print("%f seconds." % (end - start))
+
                 elif choice2 == 3:
                     aespassword = input("Enter AES password: ")
                     aesinput2 = input("Enter message to be decrypted: ")
                     key = make_key(aespassword)
                     ciphertext, iv = aesencrypt(aesinput2, key)
                     print(ciphertext)
+                    start = time()
                     decrypted = aesdecrypt(ciphertext,key,iv)
                     print("The clear text is: " + decrypted)
+                    end = time()
+                    print("%f seconds." % (end - start))
                     
                 
                 elif choice2 == 4:
                     key = "mysecret"
                     des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
-                    desinput = input("Enter your encrypted message: ")
+                    desinput = input("Enter your message to be encrypted and decrypted: ")
                     padded_text = despad(desinput)
+                    start = time()
                     encrypted_text = des.encrypt(padded_text.encode("utf-8"))
                     print(b"Given encrypted message: " + encrypted_text)
                     print("The cleartext is: " + des.decrypt(encrypted_text).decode("utf-8"))
+                    end = time()
+                    print("%f seconds." % (end - start))
 
                 elif choice2 == 5:
                     break
