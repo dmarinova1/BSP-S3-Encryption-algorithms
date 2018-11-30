@@ -121,7 +121,7 @@ def main():
                     start = time()
                     print(encryptCaeser(text1))
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
 
 
                 elif choice1 == 2:
@@ -129,7 +129,7 @@ def main():
                     start = time()
                     encrypt_rot13()
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
 
                 elif choice1 == 3:
                     aespassword = input("Enter AES encryption password: ")
@@ -139,7 +139,7 @@ def main():
                     ciphertext,iv = aesencrypt(aesinput1, key)
                     print(b"The ciphertext is: " + ciphertext)
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
                 
                 elif choice1 == 4:
                     key = "mysecret"
@@ -150,7 +150,7 @@ def main():
                     encrypted_text = des.encrypt(padded_text.encode("utf-8"))
                     print(encrypted_text)
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
                 
                 elif choice1 == 5:
                     break
@@ -167,7 +167,7 @@ def main():
                     start = time()
                     print(decryptCaeser(text2))
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
 
 
 
@@ -176,7 +176,7 @@ def main():
                     start = time()
                     decrypt_rot13()
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
 
                 elif choice2 == 3:
                     aesinput2 = input("Enter message to be decrypted: ")
@@ -188,7 +188,7 @@ def main():
                     decrypted = aesdecrypt(ciphertext,key,iv)
                     print("The clear text is: " + decrypted)
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
                     
                 
                 elif choice2 == 4:
@@ -201,7 +201,7 @@ def main():
                     print(b"Given encrypted message: " + encrypted_text)
                     print("The cleartext is: " + des.decrypt(encrypted_text).decode("utf-8"))
                     end = time()
-                    print("%f seconds." % (end - start))
+                    print("It took %f seconds." % (end - start))
 
                 elif choice2 == 5:
                     break
