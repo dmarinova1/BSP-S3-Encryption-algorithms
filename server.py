@@ -17,11 +17,11 @@ class EchoThread (threading.Thread):
             #keep echoing what the client sent, until the connection is closed then the EchoThread terminates
             while True:
                 data = conn.recv(4096)
-                if not data:
-                    break
-                conn.sendall(b'you said: ' + data)
-        print("connection closed with ", addr)
-#we close socket connection between server and client
+                if not data: # if there is no data, the connection is broken
+                    break #break out of loop
+                conn.sendall(b'you said: ' + data) #send back to client the reply
+            print("connection closed with ", addr) # if loop is broken, connection is broken, thus, connection between client and server is closed
+
 #create a socket as communication endpoint using the TCP protocol
 s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 print("Socket created.")
@@ -33,8 +33,7 @@ s.listen(10)
 print("The server is ready...")
 print("IP address of the server:%s" % ip)
     
-#keep accepting incoming connections in an infinite loop; create and launch a separate dedicated EchoThread to handle the communication with some client
-    
+#keep accepting many incoming connections in an infinite loop; create and launch a separate dedicated EchoThread to handle the communication with some client
 while True:
     (conn, addr) = s.accept()
     print('%s connected to the server' % str(addr))
