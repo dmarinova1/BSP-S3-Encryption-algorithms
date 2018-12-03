@@ -1,9 +1,9 @@
 import base64
 import hashlib
-from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
-from Crypto import Random
-from Crypto.Cipher import DES
+from Cryptodome.Cipher import AES
+from Cryptodome.Hash import SHA256
+from Cryptodome import Random
+from Cryptodome.Cipher import DES
 from timeit import default_timer as time
 
 
@@ -160,7 +160,7 @@ def main():
 
         if eOrD == "decrypt" or eOrD == "d":
             while True:
-                choice2 = int(input("1.Decryption with Caeser cipher\n2.Decryption with ROT13\n3. Decryption with AES\n4.Decryption with DES\n5.Go back\nChoose 1,2,3 or 4: "))
+                choice2 = int(input("1.Decryption with Caeser cipher\n2.Decryption with ROT13\n3. Decryption with AES\n4.Decryption with DES\n5.Go back\nChoose 1,2,3,4 or 5: "))
                 if choice2 == 1:
                     text2 = input("Enter message to be decrypted: ")
                     print("---Decrypting with Caeser cipher---")
