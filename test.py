@@ -1,9 +1,10 @@
 import base64
-import hashlib
+import hashlib, os
 from Cryptodome.Cipher import AES
 from Cryptodome.Hash import SHA256
 from Cryptodome import Random
 from Cryptodome.Cipher import DES
+from Cryptodome.Util.Padding import unpad
 from timeit import default_timer as time
 
 
@@ -20,18 +21,35 @@ def make_key(aespassword):
     return key
 
 def aesencrypt(message, key):
-
-    iv = Random.new().read(AES.block_size)
-    cipher = AES.new(key, AES.MODE_CFB, iv)
+	
+    pad = AES.block_size - len(message) % AES.block_size
+    try:
+        message = message.decode()
+    except:
+        pass
+    message = message + pad * chr(pad)
+    
+    iv = os.urandom(16)
+    fout_iv = open("iv.dat", "wb")
+    fout_iv.write(iv)
+    fout_iv.close()
+    cipher = AES.new(key, AES.MODE_CBC, iv)
     ciphertext = cipher.encrypt(message.encode("utf-8"))
-    return (ciphertext, iv)
+    print(ciphertext)
+    ciphertext = base64.b64encode(ciphertext)
+
+    return ciphertext
 
 
-def aesdecrypt(ciphertext, key, iv):
+def aesdecrypt(ciphertext, key):
 
-    cipher = AES.new(key, AES.MODE_CFB, iv)
-    msg = cipher.decrypt(ciphertext).decode("utf-8")
-    return msg
+    enc_msg = base64.b64decode(ciphertext)
+    fin_iv = open("iv.dat", "rb")
+    iv = fin_iv.read()
+    fin_iv.close()
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    msg = unpad(cipher.decrypt(enc_msg), 16)
+    return msg.decode("utf-8")
 
 def encryptCaeser(message):
 
@@ -136,10 +154,19 @@ def main():
                     aesinput1 = input("Enter your message to be encrypted: ")
                     key = make_key(aespassword)
                     start = time()
-                    ciphertext,iv = aesencrypt(aesinput1, key)
+                    ciphertext = aesencrypt(aesinput1, key)
                     print(b"The ciphertext is: " + ciphertext)
                     end = time()
                     print("It took %f seconds." % (end - start))
+                    
+                    # Write the cipher and the key in separate files
+                    fout_cipher = open("cipher.dat", "wb")
+                    fout_cipher.write(ciphertext)
+                    fout_cipher.close()
+                    
+                    fout_key = open("key.dat", "wb")
+                    fout_key.write(key)
+                    fout_key.close()
                 
                 elif choice1 == 4:
                     key = "mysecret"
@@ -179,14 +206,24 @@ def main():
                     print("It took %f seconds." % (end - start))
 
                 elif choice2 == 3:
-                    aesinput2 = input("Enter message to be encrypted then decrypted: ")
-                    aespassword = input("Enter AES password: ")
-                    key = make_key(aespassword)
-                    ciphertext, iv = aesencrypt(aesinput2, key)
-                    print(ciphertext)
+                    if not os.path.isfile("cipher.dat"):
+                        print("WARN: There is no ciphertext for decryption.")
+                        exit(1)
+                    if not os.path.isfile("key.dat"):
+                        print("WARN: The encryption key is missing.")
+                        exit(1)
+						
+                    fin_cipher = open("cipher.dat", "rb")
+                    ciphertext = fin_cipher.read()
+                    fin_cipher.close()
+                    
+                    fin_key = open("key.dat", "rb")
+                    key = fin_key.read()
+                    fin_key.close()
+                    
                     start = time()
-                    decrypted = aesdecrypt(ciphertext,key,iv)
-                    print("The clear text is: " + decrypted)
+                    decrypted = aesdecrypt(ciphertext, key)
+                    print("AM: The clear text is: " + decrypted)
                     end = time()
                     print("It took %f seconds." % (end - start))
                     
