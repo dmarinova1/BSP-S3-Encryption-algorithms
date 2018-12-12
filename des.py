@@ -2,7 +2,6 @@ import base64
 import os
 from Cryptodome import Random
 from Cryptodome.Cipher import DES
-from Cryptodome.Util.Padding import unpad
 from timeit import default_timer as time
 
 def despad(text):
@@ -39,7 +38,7 @@ def main():
             while True:
                 choice2 = int(input("1.Decryption with DES\n2.Go back\nChoose 1 or 2: "))
                 if choice2 == 1:
-                    desinput = input("Enter ciphertext to be decrypted: ")
+                    desinput = input(b"Enter ciphertext to be decrypted: ")
                     start = time()
                     desinput = base64.b64decode(desinput)
                     decrypted_text = des.decrypt(desinput)
