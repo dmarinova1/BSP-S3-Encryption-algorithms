@@ -11,6 +11,9 @@ def despad(text):
     return text
 
 def main():
+    key = "mysecret"
+    des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
+
     while True:
         eOrD = str(input("Are you trying to encrypt or decrypt a message? "))
 
@@ -18,12 +21,11 @@ def main():
             while True:
                 choice1 = int(input("1.Encryption with DES\n2.Go back\nChoose 1 or 2: "))
                 if choice1 == 1:
-                    key = "mysecret"
-                    des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
                     text1 = input("Enter your message: ")
                     padded_text = despad(text1)
                     start = time()
                     encrypted_text = des.encrypt(padded_text.encode("utf-8"))
+                    encrypted_text = base64.b64encode(encrypted_text)
                     print(encrypted_text)
                     end = time()
                     print("It took %f seconds." % (end - start))
@@ -37,16 +39,11 @@ def main():
             while True:
                 choice2 = int(input("1.Decryption with DES\n2.Go back\nChoose 1 or 2: "))
                 if choice2 == 1:
-                    key = "mysecret"
-                    des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
-                    desinput = input(
-                        "Enter your message to be encrypted and decrypted: ")
-                    padded_text = despad(desinput)
+                    desinput = input("Enter ciphertext to be decrypted: ")
                     start = time()
-                    encrypted_text = des.encrypt(padded_text.encode("utf-8"))
-                    print(b"Given encrypted message: " + encrypted_text)
-                    print("The cleartext is: " +
-                          des.decrypt(encrypted_text).decode("utf-8"))
+                    desinput = base64.b64decode(desinput)
+                    decrypted_text = des.decrypt(desinput)
+                    print(b"The cleartext is: " + decrypted_text)
                     end = time()
                     print("It took %f seconds." % (end - start))
 
