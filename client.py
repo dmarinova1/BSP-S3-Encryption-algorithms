@@ -91,7 +91,7 @@ while True:
 
     choice1 = int(input("1.Encryption with Caeser cipher\n2.Encryption with ROT13\n3.Encryption with AES\n4.Encryption with DES\n5.Go back\nChoose 1,2,3,4 or 5: "))
     if choice1 == 1:
-        message = input("What is the message you would like to have encrypted?: ")
+        message = input("Enter your message to be encrypted: ")
         print("---Encrypting with Caeser cipher---")
         start = time()
         encrypted_text = encryptCaeser(message)
@@ -136,7 +136,7 @@ while True:
         fout_key.close()
 
     elif choice1 == 4:
-        text1 = input("Enter your message: ")
+        text1 = input("Enter your message to be encrypted: ")
         padded_text = despad(text1)
         start = time()
         encrypted_text = des.encrypt(padded_text.encode("utf-8"))
@@ -153,9 +153,9 @@ while True:
 
     else:
         print("Invalid choice")
-        
-        incoming_message = s.recv(4096)
-        incoming_message = incoming_message.decode()
-        print(" Server : ", incoming_message.lower())
-        print("")
+
+    incoming_message = s.recv(4096)
+    incoming_message = incoming_message.decode()
+    print(" Server : ", incoming_message.lower())
+    print("")
 

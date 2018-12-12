@@ -135,10 +135,10 @@ while True:
         desinput = incoming_message
         desinput = base64.b64decode(desinput)
         start = time()
-        decrypted_text = des.decrypt(desinput)
-        print(b"The cleartext is: " + decrypted_text)
+        decrypted_text = des.decrypt(desinput).decode("utf-8")
+        print("The cleartext is: " + decrypted_text)
         end = time()
-        conn.send(decrypted_text)
+        conn.send(decrypted_text.encode())
         print("Message sent.")
         print("")
         print("It took %f seconds." % (end - start))
