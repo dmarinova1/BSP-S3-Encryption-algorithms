@@ -16,17 +16,52 @@ The larger the block size, the key size and number of rounds means greater secur
 
 The technical part of our project consists of creating a chat application. Our source code editor is Visual Studio Code and we program in Python. We create a TCP server as well as a TCP client that connects to the server. 
 For the client to use TCP Networking, we require a socket module, imported beforehand from Python's standard library, that serves as a communication endpoint with two parameters:
-s= socket.socket(socket.AF\_INET, socket.SOCK\_STREAM)
-the first parameter AF\_INET stands for IPv4, the connection type we want to use, and the second parameter \textit{SOCK\_STREAM} means we are going to use TCP connection. We specify a variable for port number (on which the server is running) and ip, which holds the ip of the host machine it is running on. We use \textit{gethostbyname} to look for the host’s ip since the host machine does not have a fixed IP address and often when it reconnects to an Internet connection is assigned a new IP address.
-\textit{ip = str(socket.gethostbyname(socket.gethostname()))}
-\textit{port = 1234}
-Once we the port and ip address are known, we can connect to the server by passing the function to a data structure \textit{s.connect(((ip, port))}
+\begin{verbatim}
+s= socket.socket
+    (socket.AF_INET, socket.SOCK_STREAM)
+\end{verbatim}
+the first parameter \textit{AF\_INET} stands for IPv4, the connection type we want to use, and the second parameter \textit{SOCK\_STREAM} means we are going to use TCP connection. We specify a variable for port number (on which the server is running) and ip, which holds the ip of the host machine it is running on. We use \textit{gethostbyname} to look for the host’s ip since the host machine does not have a fixed IP address and often when it reconnects to an Internet connection is assigned a new IP address.
+\begin{verbatim}
+ip = str(socket.gethostbyname
+           (socket.gethostname()))
+port = 1234
+\end{verbatim}
+Once we the port and ip address are known, we can connect to the server by passing the function to a data structure:
+\begin{verbatim}
+s.connect(((ip, port))
+\end{verbatim}
 
 For the server to use TCP Networking, we require a socket module that serves as a communication endpoint with two parameters:
-\textit{s= socket.socket(socket.AF\_INET, socket.SOCK\_STREAM)}
-For the client to work, a port number equal to 1234 is specified equal to the server’s so that both can connect. When the port and host have been bounded, we can listen to incoming connections with socket variable s and calling listen on it: \textit{s.listen(10)}. We pass the variable 10 which means that up to 10 people can be queued for us to handle the requests. However, the eleventh will be rejected. To accept requests from outside, we use connection variable and address variable as: \textit{conn, addr = s.accept()} which stores the ip import of the client trying to connect and we call accept on the socket we have created. Upon a connection being established, the client can send messages to the server that will cause it to echo back the message. The server can receive data from client by creating variable data and sending it to the response gathered from connection. We write: \textit{incoming\_message = conn.recv(4096)}. Afterwards we can close the connection between client and server \textit{conn.close()}, on the server side, as well as close the socket itself as it allows connections to exist, on the client side, \textit{s.close()}.
-For our project, we aim at implementing in Python several encryption and decryption applications. The client stores the encryption algorithms, whereas the server holds the decryption methods. We make use of Caeser Cipher, ROT13, DES and AES.
-DES and AES have been implemented through the means of the crypto library “PyCryptodome”. It is a self-contained Python package of low-level cryptographic primitives \cite{pycryptodome}. It supports PyPy, Python2 and Python3. PyCryptodome can be used as a replacement for the old PyCrypto library. We install all modules under Crypto package with pip3 install pycryptodome.  However, having both PyCrypto and PyCryptodome installed at the same time is not a good idea as they will interfere with each other. If, however, one insists on having them both, it would be best to deploy them in a virtual environment. To have an independent library of the old PyCrypto, it suffices to type the following command in Terminal shell:\textit{pip3 install pycryptodomex} and all modules are installed under Cryptodome package and PyCrypto and PyCryptodome can coexist. 
+\begin{verbatim}
+s= socket.socket
+    (socket.AF_INET, socket.SOCK_STREAM)
+\end{verbatim}
+For the client to work, a port number equal to 1234 is specified equal to the server’s so that both can connect. When the port and host have been bounded, we can listen to incoming connections with socket variable s and calling listen on it:
+\begin{verbatim}
+s.listen(10)
+\end{verbatim}
+We pass the variable 10 which means that up to 10 people can be queued for us to handle the requests. However, the eleventh will be rejected. To accept requests from outside, we use connection variable and address variable as:
+\begin{verbatim}
+conn, addr = s.accept()
+\end{verbatim} 
+which stores the ip import of the client trying to connect and we call accept on the socket we have created. Upon a connection being established, the client can send messages to the server that will cause it to echo back the message. The server can receive data from client by creating variable data and sending it to the response gathered from connection. We write:
+\begin{verbatim}
+incoming_message = conn.recv(4096)
+\end{verbatim} 
+Afterwards we can close the connection between client and server
+\begin{verbatim} 
+conn.close()
+\end{verbatim} 
+on the server side, as well as close the socket itself as it allows connections to exist, on the client side,
+\begin{verbatim} 
+s.close()
+\end{verbatim}
+For our project, we aim at implementing in Python several encryption and decryption applications. The client stores the encryption algorithms, whereas the server holds the decryption methods. We make use of Caeser Cipher, ROT13, DES, and AES.
+DES and AES have been implemented through the means of the crypto library “PyCryptodome”. It is a self-contained Python package of low-level cryptographic primitives \cite{pycryptodome}. It supports PyPy, Python2 and Python3. PyCryptodome can be used as a replacement for the old PyCrypto library. We install all modules under Crypto package with pip3 install pycryptodome.  However, having both PyCrypto and PyCryptodome installed at the same time is not a good idea as they will interfere with each other. If, however, one insists on having them both, it would be best to deploy them in a virtual environment. To have an independent library of the old PyCrypto, it suffices to type the following command in Terminal shell:
+\begin{verbatim}
+pip3 install pycryptodomex
+\end{verbatim} 
+and all modules are installed under Cryptodome package and PyCrypto and PyCryptodome can coexist. 
 
 
 \subsection{Production ($\pm$ 20\% total words)}
