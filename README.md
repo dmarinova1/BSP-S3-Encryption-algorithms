@@ -7,7 +7,7 @@
 
 4. PL-VIDEO - 15 min video in English
 
-5. SL-VIDEO - 5 video in French
+5. SL-VIDEO - 5 min video in French
 
 \pard\pardeftab720\sl280\partightenfactor0
 \cf2 \expnd0\expndtw0\kerning0
