@@ -10,8 +10,10 @@ from Cryptodome.Cipher import DES
 from Cryptodome.Util.Padding import unpad
 from timeit import default_timer as time
 
+
+
 def decryptCaeser(message):
-    message = message
+
     key = 3
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
     newMessage = ""
@@ -21,27 +23,36 @@ def decryptCaeser(message):
             newPosition = (position - key) % 26
             newChar = alphabet[newPosition]
             newMessage += newChar
-        
         else:
             newMessage += char
     return newMessage
 
-def decrypt_rot13(msg):
-    message = msg.upper() # work with uppercase letters
-    
-    key = 13
-    decrypt_text = ""
-    for i in range(len(message)):
-        temp = ord(message[i]) - key
-        if ord(message[i]) == 32: #check for space i.e. 32 is empty space in ASCII
-            decrypt_text += " "
-        elif temp < 65: #if temp < than uppercase A add 26 and move to Z
-            temp += 26
-            decrypt_text += chr(temp)
-        else:
-            decrypt_text += chr(temp)
 
-    return decrypt_text
+#ROT13 (de)encryption function
+#initialization of letters (ASCII table where A-Z in 65-90 and a-z in 97 to 122; numbers and symbols are immune to ROT13 operations)
+LOWER_LETTERS = [chr(x) for x in range(97, 123)]
+UPPER_LETTERS = [chr(x) for x in range(65, 91)]
+
+
+def rot13(plaintext):
+
+    ciphertext = " "
+    for char in plaintext:
+        if char.isupper():
+            ciphertext += encrypt_rot13(char, UPPER_LETTERS)
+        elif char.islower():
+            ciphertext += encrypt_rot13(char, LOWER_LETTERS)
+        else:
+            ciphertext += char
+    return ciphertext
+
+
+def encrypt_rot13(char, alphabet):
+    newChar = ''
+    originalIndex = alphabet.index(char)
+    newIndex = originalIndex + 13 #each letter rotated 13 characters
+    newChar += alphabet[newIndex % len(alphabet)]
+    return newChar
 
 
 def aesdecrypt(ciphertext, key):
@@ -77,7 +88,7 @@ while True:
     print(" Client : ", incoming_message)
     print("")
 
-    choice2 = int(input("1.Decryption with Caeser cipher\n2.Decryption with ROT13\n3.Decryption with AES\n4.Decryption with DES\n5.Go back\nChoose 1,2,3,4 or 5: "))
+    choice2 = int(input("1.Decryption with Caeser cipher\n2.Decryption with ROT13\n3.Decryption with AES\n4.Decryption with DES\n5.Close connection\nChoose 1,2,3,4 or 5: "))
         
         
     if choice2 == 1:
@@ -93,13 +104,13 @@ while True:
         print("Decryption with Caeser cipher took %f seconds." % (end - start))
                 
     elif choice2 == 2:
- 
+        message = incoming_message
         print("---Decrypting with ROT13---")
         start = time()
-        decrypted = decrypt_rot13(incoming_message)
-        print(decrypted.lower())
+        decrypted_text = rot13(message)
+        print(decrypted_text)
         end = time()
-        conn.send(decrypted.encode())
+        conn.send(decrypted_text.encode())
         print("Message sent.")
         print("")
         print("Decryption with ROT13 took %f seconds." % (end - start))
@@ -148,3 +159,4 @@ while True:
         print("Invalid choice")
             
             
+conn.close()

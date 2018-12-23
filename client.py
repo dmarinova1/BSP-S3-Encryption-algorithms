@@ -16,13 +16,13 @@ port = 1234
 s.connect((host,port))
 print("Connected to chat server")
 
-
-
+# Caesar cipher encryption function
 def encryptCaeser(message):
+    
     alphabet = 'abcdefghijklmnopqrstuvwxyz'
     key = 3
     newMessage = ""
-    
+
     for char in message:
         if char in alphabet:
             position = alphabet.find(char)
@@ -31,28 +31,37 @@ def encryptCaeser(message):
             newMessage += newChar
         else:
             newMessage += char
-
     return newMessage
 
 
-def encrypt_rot13():
-    message = input("Enter you message to be encrypted: ").upper()
-    
-    key = 13
-    encrypt_text = ""
-    for i in range(len(message)):
-        temp = ord(message[i]) + key
-        if ord(message[i]) == 32:
-            encrypt_text += " "
-        elif temp > 90: #if temp > uppercase Z substract 26 and go back to A; we note that in ASCII characters lowercase letters from a to z go from 97 to 122
-            temp -= 26
-            encrypt_text += chr(temp)
+#ROT13 encryption function
+#initialization of letters (ASCII table where A-Z in 65-90 and a-z in 97 to 122; numbers and symbols are immune to ROT13 operations)
+LOWER_LETTERS = [chr(x) for x in range(97, 123)]
+UPPER_LETTERS = [chr(x) for x in range(65, 91)]
+
+
+def rot13(message):
+
+    ciphertext = " "
+    for char in message:
+        if char.isupper():
+            ciphertext += encrypt_rot13(char, UPPER_LETTERS)
+        elif char.islower():
+            ciphertext += encrypt_rot13(char, LOWER_LETTERS)
         else:
-            encrypt_text += chr(temp)
-    return encrypt_text
-    #print("Encrypted message using ROT13:", encrypt_text)
+            ciphertext += char
+    return ciphertext
 
 
+def encrypt_rot13(char, alphabet):
+    newChar = ''
+    originalIndex = alphabet.index(char)
+    newIndex = originalIndex + 13 #each letter rotated 13 characters
+    newChar += alphabet[newIndex % len(alphabet)]
+    return newChar
+
+
+#AES key/password creation followed by encryption function
 def make_key(aespassword):
 
     key = hashlib.sha256(aespassword.encode("utf-8")).digest()
@@ -79,23 +88,27 @@ def aesencrypt(message, key):
 
     return ciphertext
 
-
+#DES padding
 def despad(text):
     while len(text) % 8 != 0:
         text += ' '
     return text
 
+
+
+
+
 while True:
     key = "mysecret"
     des = DES.new(key.encode("utf-8"), DES.MODE_ECB)
 
-    choice1 = int(input("1.Encryption with Caeser cipher\n2.Encryption with ROT13\n3.Encryption with AES\n4.Encryption with DES\n5.Go back\nChoose 1,2,3,4 or 5: "))
+    choice1 = int(input("1.Encryption with Caeser cipher\n2.Encryption with ROT13\n3.Encryption with AES\n4.Encryption with DES\n5.Close connection\nChoose 1,2,3,4 or 5: "))
     if choice1 == 1:
         message = input("Enter your message to be encrypted: ")
         print("---Encrypting with Caeser cipher---")
         start = time()
         encrypted_text = encryptCaeser(message)
-        print(encryptCaeser(message))
+        print(encrypted_text)
         end = time()
         s.send(encrypted_text.encode())
         print("Message sent.")
@@ -103,9 +116,10 @@ while True:
         print("Encryption with Caeser cipher took %f seconds." % (end - start))
 
     elif choice1 == 2:
+        message = input("Enter your message to be encrypted: ")
         print("---Encrypting with ROT13---")
         start = time()
-        encrypted_text = encrypt_rot13()
+        encrypted_text = rot13(message)
         print(encrypted_text)
         end = time()
         s.send(encrypted_text.encode())
@@ -158,3 +172,4 @@ while True:
     print(" Server : ", incoming_message.lower())
     print("")
 
+s.close()
