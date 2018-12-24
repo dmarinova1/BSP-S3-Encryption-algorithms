@@ -106,7 +106,65 @@ We have used a TCP transport-layer protocol with the same IP address and port nu
 In general, the mode of operation plays an important role in the security of the cipher. We have used two block ciphers, DES and AES. ECB (Electronic Code Book), used along DES in our project, splits up the plaintext into blocks and encrypts them independently of each other in a parallel operation. This is an advantage of ECB. ECB does not use an initialization vector to launch the encryption. Thus, it executes the same algorithm to encrypt data. However, when multiple messages are encrypted, ECB cannot be considered secure, because identical plaintext blocks result in identical ciphertext, also known as deterministic encryption. Hence, repetition makes it easier for an attacker to guess the original message. CBC cannot operate in parallel since it waits on finishing encryption on each block. CBC, used along AES in our project, introduces an initialization vector (IV), which alters the plaintext before the start of the encryption process. The vector ensures that the initial ciphertext blocks are different even with an identical plaintext. To accomplish this, the IV is unpredictable, unique and cryptographically random for each separate key to avoid deterministic encryption. As both the encryption and decryption need to be performed using the same unique IV.  If we use a different IV in decryption, we would get a garbled message indicating an erroneous use of IV. Furthermore, the IV must be of the same length as the block size (e.g., given 64-bit block size, 64-bit IV, etc.) As mentioned earlier, when a predictable IV is used, CBC is considered vulnerable as plaintexts could be deduced. Hence, the IV cannot be transmitted alongside the cipher. The IV is the result of the previous encrypted block, XORed with the plaintext block before encryption. Hence, with CBC, every block depends on the output of the previous block. Nevertheless, the disadvantage of this property is that if there is an error or failure in a given block, it will result in the following block as well. The key in AES is hashed to provide a 256-bit output, then the hash is encrypted, and a 256-bits encrypted output is produced. The IV is then used to encrypt the next 256-bits. This results in a chaining algorithm.
 Considering the comparison between the two modes of operation, it is not a good idea to use ECB for message confidentiality as it is a rather simple and raw mode for a block cipher. Instead, we can turn to CBC and its random use of IV. 
 
-We conducted a performance analysis of the implemented algorithms. The simulation was administered on a 3,1 GHz Intel Core i7 processor with 16 GB 1867 MHz DDR3 memory. The experiments have been performed couple of times to assure that the results are consistent and are valid to compare the different algorithms. The time needed for each method to encrypt and decrypt a message of 100 bytes was measured in seconds. The message is the following: \textit{This is a 100-byte message, measuring the time it takes to encrypt and decrypt it by each algorithm}. It is imperative to note that we prepared the sentence in advance and copied-pasted it to the console. If we take the time to write a message on the spot, the time measurements will differ. Table \ref{results} shows the results of the experiment. 
+We conducted a performance analysis of the implemented algorithms. The simulation was administered on a 3,1 GHz Intel Core i7 processor with 16 GB 1867 MHz DDR3 memory. The experiments have been performed couple of times to assure that the results are consistent and are valid to compare the different algorithms. The time needed for each method to encrypt and decrypt a message of 100 bytes was measured in seconds. The message is the following: \textit{This is a 100-byte message, measuring the time it takes to encrypt and decrypt it by each algorithm}. It is imperative to note that we prepared the sentence in advance and copied-pasted it to the console. If we take the time to write a message on the spot, the time measurements will differ. 
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{caesarencrypt.jpg}
+    \caption{Caesar encryption time.}
+  \end{subfigure}
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{caesardecrypt.jpg}
+    \caption{Caesar decryption time.}
+  \end{subfigure}
+  \caption{Caesar cipher Encryption/Decryption time of a 100-byte message.}
+  \label{fig:caesar}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{rot13encrypt.jpg}
+    \caption{ROT13 encryption time.}
+  \end{subfigure}
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{rot13decrypt.jpg}
+    \caption{ROT13 decryption time.}
+  \end{subfigure}
+  \caption{ROT13 Encryption/Decryption time of a 100-byte message.}
+  \label{fig:rot13}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{desencrypt.jpg}
+    \caption{DES encryption time.}
+  \end{subfigure}
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{desdecrypt.jpg}
+    \caption{DES decryption time.}
+  \end{subfigure}
+  \caption{DES Encryption/Decryption time of a 100-byte message.}
+  \label{fig:des}
+\end{figure}
+
+\begin{figure}[h!]
+  \centering
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{aesencrypt.jpg}
+    \caption{DES encryption time.}
+  \end{subfigure}
+  \begin{subfigure}[b]{1.0\linewidth}
+    \includegraphics[width=\linewidth]{aesdecrypt.jpg}
+    \caption{DES decryption time.}
+  \end{subfigure}
+  \caption{AES Encryption/Decryption time of a 100-byte message.}
+  \label{fig:aes}
+\end{figure}
+
+
 
 \begin{table}[h!]
 \begin{tabular}{|l|c|c|}
@@ -122,7 +180,8 @@ AES & 0.002869 & 0.001703 \\ \hline
 \end{table}
 
 
-The security features of each algorithm as their strength against cryptographic attacks is already known and discussed. The factor we have chosen to determine the performance is the speed to encrypt and decrypt the data of size 100 bytes. It is easy to observe that Caesar cipher and ROT13 performed similarly in time, as expected, since they are identical cases. Moreover, DES outputs faster than AES because it is not relying on initialization vector (iv) and because the ECB mode is simpler than CBC, but these make it a weak encryption mechanism. AES performed poorly in terms of speed since CBC mode adds extra processing time due to its key-chaining nature. Nevertheless, CBC mode of operation is better than ECB and for that AES is considered the most secure of all four algorithms. We note that AES needs almost twice the time of DES to encrypt the 100-byte message and roughly ten times to produce the plaintext. In addition, AES consumes more resources and requires more processing time since it utilizes an iv and CBC mode. Overall, the slow performance of AES can be considered as negligible for applications that require secure transmission of sensitive data over the Internet.
+
+Figures 1 to 4 represent the time it took for each algorithm to encrypt and decrypt the 100-byte message. Table \ref{results} summarizes the results of the experiment. The security features of each algorithm as their strength against cryptographic attacks is already known and discussed. The factor we have chosen to determine the performance is the speed to encrypt and decrypt the data of size 100 bytes. It is easy to observe that Caesar cipher and ROT13 performed similarly in time, as expected, since they are identical cases. Moreover, DES outputs faster than AES because it is not relying on initialization vector (iv) and because the ECB mode is simpler than CBC, but these make it a weak encryption mechanism. AES performed poorly in terms of speed since CBC mode adds extra processing time due to its key-chaining nature. Nevertheless, CBC mode of operation is better than ECB and for that AES is considered the most secure of all four algorithms. We note that AES needs almost twice the time of DES to encrypt the 100-byte message and roughly ten times to produce the plaintext. In addition, AES consumes more resources and requires more processing time since it utilizes an iv and CBC mode. Overall, the slow performance of AES can be considered as negligible for applications that require secure transmission of sensitive data over the Internet.
 
 In addition, to prevent access to the message from the outside while transferring information between clients and server, we should not store any data as plaintext. The reason being is that any stored piece of information can be accessed during an attack on the server, such as a social engineering or man in the middle attack. Another remark to be made is to never create our own cryptography security schemes and to never implement an existing standard on our own. We will most probably do major security mistakes leading to insecure applications. However, for the purpose of academic education, we could not obey this rule of law. 
 As a future work, we could simulate a couple of attack scenarios such as a frequency letter analysis (on Caesar cipher and ROT13), man-in-the-middle attack or brute force (on both AES and DES) and test their success. 
